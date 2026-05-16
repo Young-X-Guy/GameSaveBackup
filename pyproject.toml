@@ -1,0 +1,10 @@
+[project]
+name = "game-save-backup"
+version = "0.1.0"
+description = "游戏存档备份软件"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "PyQt6>=6.6.0",
+    "keyboard>=0.13.5",
+]

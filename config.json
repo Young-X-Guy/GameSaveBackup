@@ -1,0 +1,42 @@
+{
+  "current_game": "血源诅咒",
+  "games": {
+    "塞尔达传说": {
+      "game_name": "塞尔达传说",
+      "source_directory": "C:/Users/Player/Documents/Zelda/Saves",
+      "backup_directory": "D:/GameBackups/Zelda",
+      "backup_interval_minutes": 15,
+      "auto_backup_enabled": true,
+      "last_backup_time": "2024-05-16 15:25:00",
+      "created_date": "2024-05-16"
+    },
+    "巫师3": {
+      "game_name": "巫师3",
+      "source_directory": "C:/Users/Player/Documents/TheWitcher3/Saves",
+      "backup_directory": "D:/GameBackups/Witcher3",
+      "backup_interval_minutes": 30,
+      "auto_backup_enabled": true,
+      "last_backup_time": "2024-05-16 14:30:00",
+      "created_date": "2024-05-16"
+    },
+    "上古卷轴5": {
+      "game_name": "上古卷轴5",
+      "source_directory": "C:/Users/Player/Documents/Skyrim/Saves",
+      "backup_directory": "D:/GameBackups/Skyrim",
+      "backup_interval_minutes": 20,
+      "auto_backup_enabled": false,
+      "last_backup_time": "2024-05-16 13:45:00",
+      "created_date": "2024-05-16"
+    },
+    "血源诅咒": {
+      "game_name": "血源诅咒",
+      "source_directory": "C:/Users/sky/Desktop/1",
+      "backup_directory": "C:/Users/sky/Desktop/backup",
+      "backup_interval_minutes": 1,
+      "auto_backup_enabled": true,
+      "last_backup_time": "2026-05-16 23:20:49",
+      "created_date": "2024-05-16"
+    }
+  },
+  "last_updated": "2026-05-16 23:20:49"
+}
