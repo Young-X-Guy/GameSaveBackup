@@ -11,8 +11,12 @@ class BackupManager:
         self.source_dir = source_dir
         self.backup_dir = backup_dir
 
-    def create_backup(self) -> Optional[str]:
-        """创建新的备份，返回备份路径"""
+    def create_backup(self, backup_type: str = "auto") -> Optional[str]:
+        """创建新的备份，返回备份路径
+
+        Args:
+            backup_type: 备份类型，"auto"表示自动备份，"manual"表示手动备份
+        """
         if not self.source_dir or not os.path.exists(self.source_dir):
             raise ValueError("源目录不存在或未设置")
 
@@ -22,9 +26,12 @@ class BackupManager:
         # 确保备份目录存在
         os.makedirs(self.backup_dir, exist_ok=True)
 
-        # 创建带时间戳的备份文件夹名
+        # 创建带时间戳的备份文件夹名，区分手动和自动备份
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        backup_folder_name = f"backup_{timestamp}"
+        if backup_type == "manual":
+            backup_folder_name = f"manual_backup_{timestamp}"
+        else:
+            backup_folder_name = f"auto_backup_{timestamp}"
         backup_path = os.path.join(self.backup_dir, backup_folder_name)
 
         try:
@@ -75,14 +82,42 @@ class BackupManager:
             return False
 
     def get_latest_backup(self) -> Optional[str]:
-        """获取最新的备份路径"""
+        """获取最新的备份路径（优先返回手动备份）"""
+        # 首先尝试获取最新的手动备份
+        latest_manual = self.get_latest_manual_backup()
+        if latest_manual:
+            return latest_manual
+
+        # 如果没有手动备份，则返回最新的自动备份
+        return self.get_latest_auto_backup()
+
+    def get_latest_manual_backup(self) -> Optional[str]:
+        """获取最新的手动备份路径"""
         if not os.path.exists(self.backup_dir):
             return None
 
         backup_folders = []
         for item in os.listdir(self.backup_dir):
             item_path = os.path.join(self.backup_dir, item)
-            if os.path.isdir(item_path) and item.startswith("backup_"):
+            if os.path.isdir(item_path) and item.startswith("manual_backup_"):
+                backup_folders.append((item_path, os.path.getctime(item_path)))
+
+        if not backup_folders:
+            return None
+
+        # 按创建时间排序，返回最新的
+        backup_folders.sort(key=lambda x: x[1], reverse=True)
+        return backup_folders[0][0]
+
+    def get_latest_auto_backup(self) -> Optional[str]:
+        """获取最新的自动备份路径"""
+        if not os.path.exists(self.backup_dir):
+            return None
+
+        backup_folders = []
+        for item in os.listdir(self.backup_dir):
+            item_path = os.path.join(self.backup_dir, item)
+            if os.path.isdir(item_path) and item.startswith("auto_backup_"):
                 backup_folders.append((item_path, os.path.getctime(item_path)))
 
         if not backup_folders:
@@ -93,14 +128,14 @@ class BackupManager:
         return backup_folders[0][0]
 
     def list_backups(self) -> List[str]:
-        """列出所有备份"""
+        """列出所有备份（包括手动和自动备份）"""
         if not os.path.exists(self.backup_dir):
             return []
 
         backups = []
         for item in os.listdir(self.backup_dir):
             item_path = os.path.join(self.backup_dir, item)
-            if os.path.isdir(item_path) and item.startswith("backup_"):
+            if os.path.isdir(item_path) and (item.startswith("manual_backup_") or item.startswith("auto_backup_")):
                 backups.append(item_path)
 
         # 按创建时间排序

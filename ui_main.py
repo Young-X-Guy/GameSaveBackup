@@ -378,7 +378,7 @@ class GameSaveBackupUI(QMainWindow):
             # 在单独的线程中执行备份操作
             def backup_worker():
                 try:
-                    backup_path = self.backup_manager.create_backup()
+                    backup_path = self.backup_manager.create_backup(backup_type="manual")
 
                     # 使用信号在主线程中更新UI
                     if backup_path:
@@ -658,7 +658,7 @@ class GameSaveBackupUI(QMainWindow):
 
         if self.backup_manager:
             try:
-                backup_path = self.backup_manager.create_backup()
+                backup_path = self.backup_manager.create_backup(backup_type="auto")
                 if backup_path:
                     self.config_manager.update_last_backup_time()
                     self.last_backup_label.setText(
@@ -684,7 +684,19 @@ class GameSaveBackupUI(QMainWindow):
                 for i, backup in enumerate(backups[:10], 1):  # 只显示最近10个
                     backup_name = os.path.basename(backup)
                     ctime = datetime.fromtimestamp(os.path.getctime(backup))
-                    history_text += f"{i}. {backup_name}\n   创建时间: {ctime.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+
+                    # 区分手动和自动备份
+                    if backup_name.startswith("manual_backup_"):
+                        backup_type = "[手动]"
+                        display_name = backup_name.replace("manual_backup_", "")
+                    elif backup_name.startswith("auto_backup_"):
+                        backup_type = "[自动]"
+                        display_name = backup_name.replace("auto_backup_", "")
+                    else:
+                        backup_type = "[未知]"
+                        display_name = backup_name
+
+                    history_text += f"{i}. {backup_type} {display_name}\n   创建时间: {ctime.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
                 self.history_label.setText(history_text)
             else:
                 self.history_label.setText("暂无备份历史")
@@ -755,7 +767,7 @@ class GameSaveBackupUI(QMainWindow):
             # 在单独的线程中执行备份操作
             def backup_worker():
                 try:
-                    backup_path = self.backup_manager.create_backup()
+                    backup_path = self.backup_manager.create_backup(backup_type="manual")
 
                     # 使用信号在主线程中更新UI
                     if backup_path:
