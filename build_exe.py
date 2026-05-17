@@ -56,17 +56,13 @@ def build_exe():
             os.remove(file)
             print(f"  已删除: {file}")
 
-    # 打包命令
+    # 打包命令 - 使用uv环境的Python
+    uv_python = ".venv\\Scripts\\python.exe"
     cmd = (
-        "pyinstaller --onefile --windowed --name=\"GameSaveBackup\" "
+        f'\"{uv_python}\" -m PyInstaller --onefile --windowed --name=\"GameSaveBackup\" '
         "--add-data \"config.json;.\" "
-        "--hidden-import PyQt6 "
-        "--hidden-import keyboard "
-        "--hidden-import json "
-        "--hidden-import os "
-        "--hidden-import shutil "
-        "--hidden-import threading "
         "--collect-all PyQt6 "
+        "--hidden-import keyboard "
         "main.py"
     )
 
